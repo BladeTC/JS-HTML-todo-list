@@ -9,6 +9,17 @@ function postList() {
   if (todoGet != null) {
     for (let i = 0; i < todoGet.length; i++) {
       if (i == 0) {
+        //   let input = document.createElement("input");
+        //   input.type="checkbox";
+        //   input.classList.add("donecheck");
+        //   input.value = i;
+
+        //   let li = document.createElement("li");
+        //   li.appendChild(input);
+        //   li.appendChild(document.createTextNode(todoGet[i]));
+
+        //   document.getElementById("to-be-list").appendChild(li);
+
         document.getElementById("to-be-list").innerHTML =
           "<li>" +
           "<input type='checkbox' class='donecheck' value='" +
@@ -49,7 +60,8 @@ function postList() {
 function addToList() {
   let item = document.getElementById("todoitem").value;
   let todoGet = JSON.parse(localStorage.getItem("todo"));
-  if (item.value == "") {
+  console.log(item);
+  if (item == "") {
     return 0;
   }
   if (todoGet == null) {
@@ -60,7 +72,6 @@ function addToList() {
   document.getElementById("todoitem").value = "";
   localStorage.setItem("todo", JSON.stringify(todoGet));
   postList();
-  location.reload();
   return 0;
 }
 
@@ -81,25 +92,31 @@ function doneChecked() {
   localStorage.setItem("todo", JSON.stringify(todoGet));
   localStorage.setItem("done", JSON.stringify(doneGet));
   postList();
-  location.reload();
   return 0;
 }
 
 function deleteDone() {
-  localStorage.setItem("done", JSON.stringify([]));
+  let todoGet = [];
+  localStorage.setItem("done", JSON.stringify(todoGet));
   postList();
-  location.reload();
   return 0;
 }
 
 postList();
 
 btn.addEventListener("click", function () {
+  if(!document.getElementById("todoitem").value)
+  {
+    return 0;
+  }
   addToList();
+  location.reload();
 });
 btndone.addEventListener("click", function () {
   doneChecked();
+  location.reload();
 });
 document.getElementById("deleteDone").addEventListener("click", function () {
   deleteDone();
+  location.reload();
 });
