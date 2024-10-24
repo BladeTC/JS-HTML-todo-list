@@ -8,52 +8,31 @@ function postList() {
   let doneGet = JSON.parse(localStorage.getItem("done"));
   if (todoGet != null) {
     for (let i = 0; i < todoGet.length; i++) {
-      if (i == 0) {
-        //   let input = document.createElement("input");
-        //   input.type="checkbox";
-        //   input.classList.add("donecheck");
-        //   input.value = i;
+      let input = document.createElement("input");
+      input.type = "checkbox";
+      input.classList.add("donecheck");
+      input.value = i;
 
-        //   let li = document.createElement("li");
-        //   li.appendChild(input);
-        //   li.appendChild(document.createTextNode(todoGet[i]));
+      let li = document.createElement("li");
+      li.appendChild(input);
+      li.appendChild(document.createTextNode(todoGet[i]));
 
-        //   document.getElementById("to-be-list").appendChild(li);
-
-        document.getElementById("to-be-list").innerHTML =
-          "<li>" +
-          "<input type='checkbox' class='donecheck' value='" +
-          i +
-          "'/> | " +
-          todoGet[i] +
-          "</li>";
-      } else {
-        document.getElementById("to-be-list").innerHTML +=
-          "<li>" +
-          "<input type='checkbox' class='donecheck' value='" +
-          i +
-          "'/> | " +
-          todoGet[i] +
-          "</li>";
-      }
+      document.getElementById("to-be-list").appendChild(li);
     }
   } else {
     localStorage.setItem("todo", JSON.stringify(todoGet));
-    document.getElementById("done-list").innerHTML = "";
+    document.getElementById("to-be-list").appendChild = "";
   }
   if (doneGet != null) {
     for (let i = 0; i < doneGet.length; i++) {
-      if (i == 0) {
-        document.getElementById("done-list").innerHTML =
-          "<li>" + doneGet[i] + "</li>";
-      } else {
-        document.getElementById("done-list").innerHTML +=
-          "<li>" + doneGet[i] + "</li>";
-      }
+      let li = document.createElement("li");
+      li.appendChild(document.createTextNode(doneGet[i]));
+
+      document.getElementById("done-list").appendChild(li);
     }
   } else {
     localStorage.setItem("done", JSON.stringify([]));
-    document.getElementById("done-list").innerHTML = "";
+    document.getElementById("done-list").appendChild = "";
   }
 }
 
@@ -105,8 +84,7 @@ function deleteDone() {
 postList();
 
 btn.addEventListener("click", function () {
-  if(!document.getElementById("todoitem").value)
-  {
+  if (!document.getElementById("todoitem").value) {
     return 0;
   }
   addToList();
