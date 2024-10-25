@@ -1,27 +1,34 @@
-const btn = document.getElementById("press");
-//let arr = [1,2,'arr','sai'];
-//let todoSet = localStorage.setItem("todo",JSON.stringify(arr));
-
 function postList() {
+  refresh("to-be-list");
+  refresh("done-list");
   let todoGet = JSON.parse(localStorage.getItem("todo"));
   let doneGet = JSON.parse(localStorage.getItem("done"));
   if (todoGet != null) {
-    for (let i = 0; i < todoGet.length; i++) {
+    for (let [key,val] of Object.entries(todoGet)) {
       let input = document.createElement("input");
       input.type = "checkbox";
       input.classList.add("donecheck");
-      input.value = i;
+      input.value = key;
+
       let rev = document.createElement("button");
       rev.type = "button";
       rev.classList.add("delete");
-      rev.script;
-      rev.value = i;
+      rev.value = key;
       rev.textContent = "delete";
+      rev.addEventListener("click",function(evt){
+        deleteToBe(key);
+        evt.target.parentNode.remove();
+      });
+
+      input.addEventListener("click",function(){
+        doneChecked(key);
+        postList();
+      });
 
       let li = document.createElement("li");
       li.appendChild(rev);
       li.appendChild(input);
-      li.appendChild(document.createTextNode(todoGet[i]));
+      li.appendChild(document.createTextNode(todoGet[key]));
 
       document.getElementById("to-be-list").appendChild(li);
     }
@@ -30,29 +37,36 @@ function postList() {
     document.getElementById("to-be-list").appendChild = "";
   }
   if (doneGet != null) {
-    for (let i = 0; i < doneGet.length; i++) {
+    for (let [key,val] of Object.entries(doneGet)) {
       let li = document.createElement("li");
-      li.appendChild(document.createTextNode(doneGet[i]));
+      li.appendChild(document.createTextNode(val));
 
       document.getElementById("done-list").appendChild(li);
     }
   } else {
-    localStorage.setItem("done", JSON.stringify([]));
+    localStorage.setItem("done", JSON.stringify({}));
     document.getElementById("done-list").appendChild = "";
   }
+}
+
+function refresh(listid){
+  const element = document.getElementById(listid);
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+  
 }
 
 function addToList() {
   let item = document.getElementById("todoitem").value;
   let todoGet = JSON.parse(localStorage.getItem("todo"));
-  console.log(item);
   if (item == "") {
     return 0;
   }
   if (todoGet == null) {
-    todoGet = [];
+    todoGet = {};
   }
-  todoGet.push(item);
+  todoGet[Date.now()]= item;
   document.getElementById("todoitem").value = "";
   localStorage.setItem("todo", JSON.stringify(todoGet));
   return 0;
@@ -62,18 +76,8 @@ function doneChecked(id) {
   let temp;
   let todoGet = JSON.parse(localStorage.getItem("todo"));
   let doneGet = JSON.parse(localStorage.getItem("done"));
-  // let checkboxes = document.getElementsByClassName("donecheck");
-  // if (checkboxes.length == 0) {
-  //   return 0;
-  // }
-  // for (let i = 0; i < checkboxes.length; i++) {
-  //   if (checkboxes[i].checked) {
-  //     temp = todoGet.splice(i, 1);
-  //     doneGet.push(temp);
-  //     break;
-  //   }
-  // }
-  doneGet.push(todoGet.splice(id,1));
+  doneGet[id] = todoGet[id];
+  delete todoGet[id];
   localStorage.setItem("todo", JSON.stringify(todoGet));
   localStorage.setItem("done", JSON.stringify(doneGet));
   return 0;
@@ -81,47 +85,42 @@ function doneChecked(id) {
 
 function deleteToBe(id) {
   let todoGet = JSON.parse(localStorage.getItem("todo"));
-  todoGet.splice(id, 1);
+  delete todoGet[id];
   localStorage.setItem("todo", JSON.stringify(todoGet));
   return 0;
 }
 
 function deleteDone() {
-  let todoGet = [];
-  localStorage.setItem("done", JSON.stringify(todoGet));
+  let todoDone = {};
+  localStorage.setItem("done", JSON.stringify(todoDone));
   return 0;
 }
 
 postList();
 
-btn.addEventListener("click", function () {
+document.getElementById("press").addEventListener("click", function () {
   if (!document.getElementById("todoitem").value) {
     return 0;
   }
   addToList();
-  location.reload();
+  postList();
 });
 
 document.getElementById("deleteDone").addEventListener("click", function () {
   deleteDone();
-  location.reload();
+  postList();
 });
 
-// document.getElementById("box").addEventListener("change", function () {
-//   doneChecked();
-//   location.reload();
+// document.body.addEventListener("change", function (evt) {
+//   if (evt.target.className === "donecheck") {
+//     doneChecked(evt.target.value);
+//     location.reload();
+//   }
 // });
-document.body.addEventListener("change", function (evt) {
-  if (evt.target.className === "donecheck") {
-    doneChecked(evt.target.value);
-    location.reload();
-  }
-});
 
-
-document.body.addEventListener("click", function (evt) {
-  if (evt.target.className === "delete") {
-    deleteToBe(evt.target.value);
-    location.reload();
-  }
-});
+// document.body.addEventListener("click", function (evt) {
+//   if (evt.target.className === "delete") {
+//     deleteToBe(evt.target.value);
+//     location.reload();
+//   }
+// });
