@@ -44,7 +44,6 @@ function postList() {
     }
   } else {
     localStorage.setItem("done", JSON.stringify({}));
-    document.getElementById("done-list").append = "";
   }
 }
 
