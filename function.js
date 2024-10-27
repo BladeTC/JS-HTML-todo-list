@@ -1,5 +1,4 @@
 function postList() {
-  //a
   refresh("to-be-list");
   refresh("done-list");
   let todoGet = JSON.parse(localStorage.getItem("todo"));
@@ -99,7 +98,8 @@ function deleteDone() {
 
 postList();
 
-document.getElementById("press").addEventListener("click", function () {
+document.getElementById("press").addEventListener("click", function (ev) {
+  ev.preventDefault();
   if (!document.getElementById("todoitem").value) {
     return 0;
   }
@@ -111,17 +111,3 @@ document.getElementById("deleteDone").addEventListener("click", function () {
   deleteDone();
   postList();
 });
-
-// document.body.addEventListener("change", function (evt) {
-//   if (evt.target.className === "donecheck") {
-//     doneChecked(evt.target.value);
-//     location.reload();
-//   }
-// });
-
-// document.body.addEventListener("click", function (evt) {
-//   if (evt.target.className === "delete") {
-//     deleteToBe(evt.target.value);
-//     location.reload();
-//   }
-// });
