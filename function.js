@@ -34,7 +34,6 @@ function postList() {
     }
   } else {
     localStorage.setItem("todo", JSON.stringify(todoGet));
-    document.getElementById("to-be-list").append = "";
   }
   if (doneGet != null) {
     for (let [key, val] of Object.entries(doneGet)) {
