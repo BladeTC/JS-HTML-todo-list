@@ -4,7 +4,7 @@ function postList() {
   let todoGet = JSON.parse(localStorage.getItem("todo"));
   let doneGet = JSON.parse(localStorage.getItem("done"));
   if (todoGet != null) {
-    for (let [key,val] of Object.entries(todoGet)) {
+    for (let [key, val] of Object.entries(todoGet)) {
       let input = document.createElement("input");
       input.type = "checkbox";
       input.classList.add("donecheck");
@@ -15,46 +15,45 @@ function postList() {
       rev.classList.add("delete");
       rev.value = key;
       rev.textContent = "delete";
-      rev.addEventListener("click",function(evt){
+      rev.addEventListener("click", function (evt) {
         deleteToBe(key);
         evt.target.parentNode.remove();
       });
 
-      input.addEventListener("click",function(){
+      input.addEventListener("click", function () {
         doneChecked(key);
         postList();
       });
 
       let li = document.createElement("li");
-      li.appendChild(rev);
-      li.appendChild(input);
-      li.appendChild(document.createTextNode(todoGet[key]));
+      li.append(rev);
+      li.append(input);
+      li.append(document.createTextNode(todoGet[key]));
 
-      document.getElementById("to-be-list").appendChild(li);
+      document.getElementById("to-be-list").append(li);
     }
   } else {
     localStorage.setItem("todo", JSON.stringify(todoGet));
-    document.getElementById("to-be-list").appendChild = "";
+    document.getElementById("to-be-list").append = "";
   }
   if (doneGet != null) {
-    for (let [key,val] of Object.entries(doneGet)) {
+    for (let [key, val] of Object.entries(doneGet)) {
       let li = document.createElement("li");
-      li.appendChild(document.createTextNode(val));
+      li.append(document.createTextNode(val));
 
-      document.getElementById("done-list").appendChild(li);
+      document.getElementById("done-list").append(li);
     }
   } else {
     localStorage.setItem("done", JSON.stringify({}));
-    document.getElementById("done-list").appendChild = "";
+    document.getElementById("done-list").append = "";
   }
 }
 
-function refresh(listid){
+function refresh(listid) {
   const element = document.getElementById(listid);
   while (element.firstChild) {
     element.removeChild(element.firstChild);
   }
-  
 }
 
 function addToList() {
@@ -66,7 +65,7 @@ function addToList() {
   if (todoGet == null) {
     todoGet = {};
   }
-  todoGet[Date.now()]= item;
+  todoGet[Date.now()] = item;
   document.getElementById("todoitem").value = "";
   localStorage.setItem("todo", JSON.stringify(todoGet));
   return 0;
