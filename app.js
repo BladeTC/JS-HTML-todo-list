@@ -10,11 +10,14 @@ let i = true;
 
 function App() {
   let [dones, setDones] = useState({});
+  function remove_done(){
+   setDones({});
+  };
   return html`<main>
     <h1>To do list</h1>
-    <${TodoList} done_items=${[dones,setDones]}/>
+    <${TodoList} dones=${dones} setDones=${setDones}/>
     <h2>Done list</h2>
-    <${DoneList} done_items=${[dones,setDones]}/>
+    <${DoneList} dones=${dones} remove_done=${remove_done}/>
   </main>`;
 }
 
@@ -22,8 +25,7 @@ function App() {
 
 function TodoList(props) {
   let [todos, setTodos] = useState({});
-  let dones = props.done_items[0];
-  let setDones = props.done_items[1];
+  let {dones,setDones} = props;
 
   function add_todo(key, value) {
     setTodos({ ...todos, [key]: value });
@@ -71,22 +73,17 @@ function TodoForm(props) {
 }
 
 //
-function add_to_done(props1,props2,key,value){
-  let {dones,setDones} = props1;
-  let todos2 = props2.todos;
-  let setTodos = props2.setTodos;
-  console.log(todos2)
-  delete todos2[key];
-  setTodos(todos2);
+function add_to_done(done_props,todo_props,key,value){
+  let {dones,setDones} = done_props;
+  let {todos,setTodos} = todo_props;
+  let new_todos = todos;
+  delete new_todos[key];
+  setTodos(new_todos);
   setDones({...dones,[key]: value});
 }
 
 function DoneList(props) {
-  let dones = props.done_items[0];
-  function remove_done(){
-   let setDones = props.done_items[1];
-   setDones({});
-  };
+  let {dones,remove_done} = props;
   return html`<div>
     <button onClick=${remove_done}>Delete done</button>
     <ul>
