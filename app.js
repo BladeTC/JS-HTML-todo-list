@@ -12,12 +12,15 @@ function App() {
   let [dones, setDones] = useState({});
 
   function remove_done(){
-   setDones({});
-  };
+    setDones({});
+   };
+   function handle_todo_check(key,value){
+    setDones({...dones,[key]: value});
+   };
 
   return html`<main>
     <h1>To do list</h1>
-    <${TodoList} dones=${dones} setDones=${setDones}/>
+    <${TodoList} dones=${dones} onTodoCheck=${handle_todo_check}/>
     <h2>Done list</h2>
     <${DoneList} dones=${dones} remove_done=${remove_done}/>
   </main>`;
@@ -27,7 +30,7 @@ function App() {
 
 function TodoList(props) {
   let [todos, setTodos] = useState({});
-  let {dones,setDones} = props;
+  let {dones,onTodoCheck} = props;
 
   function add_todo(key, value) {
     setTodos({ ...todos, [key]: value });
@@ -39,13 +42,19 @@ function TodoList(props) {
     setTodos(todos2);
   }
 
+  function handle_checkbox_click(key,value){
+    delete todos[key];
+    setTodos(todos);
+    onTodoCheck(key,value);
+  }
+
   return html`<div>
     <${TodoForm} add_todo=${add_todo} />
     <ul>
       ${Object.entries(todos).map(
         ([key, value]) =>
           html`<li key=${key}>
-          <input type="checkbox" onClick=${() =>add_to_done(dones,setDones,todos,setTodos,key,value)}/>
+          <input type="checkbox" onClick=${()=>handle_checkbox_click(key,value)}/>
             ${value}<input
     type="button"
     value="Delete"
@@ -57,6 +66,7 @@ function TodoList(props) {
     </ul>
   </div>`;
 }
+//<input type="checkbox" onClick=${() =>add_to_done(dones,setDones,todos,setTodos,key,value)}/>
 
 function TodoForm(props) {
   let { add_todo } = props;
@@ -75,12 +85,6 @@ function TodoForm(props) {
 }
 
 //
-function add_to_done(dones,setDones,todos,setTodos,key,value){
-  let new_todos = todos;
-  delete new_todos[key];
-  setTodos(new_todos);
-  setDones({...dones,[key]: value});
-}
 
 function DoneList(props) {
   let {dones,remove_done} = props;
