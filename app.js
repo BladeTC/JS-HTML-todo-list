@@ -10,9 +10,11 @@ let i = true;
 
 function App() {
   let [dones, setDones] = useState({});
+
   function remove_done(){
    setDones({});
   };
+
   return html`<main>
     <h1>To do list</h1>
     <${TodoList} dones=${dones} setDones=${setDones}/>
@@ -43,7 +45,7 @@ function TodoList(props) {
       ${Object.entries(todos).map(
         ([key, value]) =>
           html`<li key=${key}>
-          <input type="checkbox" onClick=${() =>add_to_done({dones,setDones},{todos,setTodos},key,value)}/>
+          <input type="checkbox" onClick=${() =>add_to_done(dones,setDones,todos,setTodos,key,value)}/>
             ${value}<input
     type="button"
     value="Delete"
@@ -73,9 +75,7 @@ function TodoForm(props) {
 }
 
 //
-function add_to_done(done_props,todo_props,key,value){
-  let {dones,setDones} = done_props;
-  let {todos,setTodos} = todo_props;
+function add_to_done(dones,setDones,todos,setTodos,key,value){
   let new_todos = todos;
   delete new_todos[key];
   setTodos(new_todos);
